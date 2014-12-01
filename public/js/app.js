@@ -3,8 +3,13 @@
 $(document).foundation();
 
 
-// angular app
-// ================================================================
+/**
+ * @license FBComments v0.1
+ * (c) 2014,  faffyman@gmail.com
+ * License: MIT
+ * =================================================================
+ */
+
 
 var model = {
 
@@ -37,7 +42,6 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
         var pageTitle = "";
 
         var pos = pageText.toLowerCase().indexOf('https://www.facebook.com/');
-        console.log('pos', pos);
 
         if (  pos ===0  ) {
             $scope.parser.href = pageText;
@@ -75,7 +79,6 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
         //$scope.fbcomments.winner = winner;
         $scope.fbcomments.winner = $scope.fbcomments.allcomments[winner];
 
-        console.log( $scope.fbcomments.winner);
 
 
         return false;
@@ -110,63 +113,8 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
             }); //end function
 
 
-        console.log($scope.fbcomments.allcomments);
-
     }
 
     //
 
 });
-
-
-
-
-/**
- Sample Graph Call URL
- https://graph.facebook.com/comments/?limit=3000000&ids=http://www.forestside.co.uk/lookbook/autumn2014/,808541022502338,802221316467642,800659843290456
-
-
- Sample output from graph call
-
-808541022502338: {
-    comments: {
-        data: [
-            {
-                id: "808541022502338_808566012499839",
-                can_remove: false,
-                created_time: "2014-10-09T11:49:42+0000",
-                from: {
-                    category: "Shopping/retail",
-                    category_list: [
-                        {
-                            id: "109527622457518",
-                            name: "Shopping Mall"
-                         }
-                    ],
-                    name: "Forestside",
-                    id: "124378627585251"
-                },
-                like_count: 3,
-                message: "Hi Folks, Make sure you comment on our Look Book on the link provided above to be entered into the competition! The Look Book is hosted on our website. Thanks & good luck!",
-                user_likes: false
-            },
-            {
-                id: "808541022502338_812790792077361",
-                can_remove: false,
-                created_time: "2014-10-17T16:32:42+0000",
-                from: {
-                    id: "694843688",
-                    name: "Jacqui Mannis"
-                },
-                like_count: 1,
-                message: "Winter florals and pastels my fav! X",
-                user_likes: false
-            }
-        ]
-    }
-}
-
-
-
-
- */

@@ -13,12 +13,12 @@ $(document).foundation();
 
 var model = {
 
-     pages: [ ],
+    pages: [ ],
 
-     allcomments: [ ],
+    allcomments: [ ],
 
     winner: ""
- };
+};
 
 
 var FbComApp = angular.module("FbComApp", []);
@@ -60,11 +60,49 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
         //otherwise treat it as a separate entity.
         $scope.fbcomments.pages.push(entity);
 
+        document.getElementById('posturl').value =  '';
+
         //get comments for that ID.
         $scope.getPostComments(entity);
 
+
+
         return false;
 
+    }
+
+
+
+    // Delete an item and it's associated comments
+    $scope.deleteItem = function (entity) {
+
+
+
+        angular.forEach($scope.fbcomments.pages, function (item) {
+            console.log('item', item);
+            console.log('entity', entity);
+
+            if (item === entity || item.title === entity.title) {
+                console.log('delete item:',  item.title);
+
+                // now remove item
+                var itemindex =  $scope.fbcomments.pages.indexOf(item);
+                $scope.fbcomments.pages.splice(itemindex,1);
+
+                // remove all comments and rebuild
+                $scope.fbcomments.allcomments = [];
+
+                angular.forEach($scope.fbcomments.pages, function (page) {
+                    $scope.getPostComments(page);
+                });
+
+
+                return false;
+            }
+
+        });
+
+        return false;
     }
 
 
@@ -91,26 +129,26 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
     $scope.getPostComments = function (postEntity) {
 
 
-            var graphURL = "https://graph.facebook.com/comments/?limit=3000000&ids=";
-                graphURL = graphURL  + postEntity.fbid ;
+        var graphURL = "https://graph.facebook.com/comments/?limit=3000000&ids=";
+        graphURL = graphURL  + postEntity.fbid ;
 
-            $http.get(graphURL).success(function (data) {
+        $http.get(graphURL).success(function (data) {
 
-                //for other 3rd party URLs.
-                if (data[postEntity.fbid].hasOwnProperty('comments')) {
+            //for other 3rd party URLs.
+            if (data[postEntity.fbid].hasOwnProperty('comments')) {
 
-                    for (key in data[postEntity.fbid].comments.data) {
-                        $scope.fbcomments.allcomments.push(data[postEntity.fbid].comments.data[key]);
-                    }
-
-                } else {
-                    // works for faacebook URLs when just adding a facebook entity ID
-                    for (key in data[postEntity.fbid].data) {
-                        $scope.fbcomments.allcomments.push(data[postEntity.fbid].data[key]);
-                    }
+                for (key in data[postEntity.fbid].comments.data) {
+                    $scope.fbcomments.allcomments.push(data[postEntity.fbid].comments.data[key]);
                 }
 
-            }); //end function
+            } else {
+                // works for faacebook URLs when just adding a facebook entity ID
+                for (key in data[postEntity.fbid].data) {
+                    $scope.fbcomments.allcomments.push(data[postEntity.fbid].data[key]);
+                }
+            }
+
+        }); //end function
 
 
     }

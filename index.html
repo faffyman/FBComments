@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facebook Comments Examiner</title>
     <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="components/vendor/font-awesome/css/font-awesome.min.css" />
     <script src="components/vendor/modernizr/modernizr.js"></script>
     <script src="components/vendor/angular/angular.min.js"></script>
 </head>
@@ -13,11 +14,11 @@
 <header>
 
     <div class="row">
-    <div class="large-12 columns">
-        <h1>Facebook Comments Finder</h1>
-        <p>Get a combined list of comments and those who made them from across a range of facebook posts or webpages.
-           You may also pick a single comment at random for the purposes of "comment to win" competitions</p>
-    </div>
+        <div class="large-12 columns">
+            <h1>Facebook Comments Finder</h1>
+            <p>Get a combined list of comments and those who made them from across a range of facebook posts or webpages.
+                You may also pick a single comment at random for the purposes of "comment to win" competitions</p>
+        </div>
     </div>
 
 </header>
@@ -31,7 +32,7 @@
                     <input type="text" placeholder="http://..." id="posturl"  ng-model="pageText" />
                 </div>
                 <div class="small-2 columns">
-                    <a href="#" class="button postfix " onclick="return false;" ng-click="addNewItem(pageText)">Add</a>
+                    <a href="#" class="button postfix " ng-click="addNewItem(pageText)">Add</a>
                 </div>
 
             </div>
@@ -40,52 +41,64 @@
 </div>
 
 
-    <div class="row">
-        <div class="large-8 medium-8 columns">
-            <!-- Grid Example -->
+<div class="row">
+    <div class="large-8 medium-8 columns">
+        <!-- Grid Example -->
 
-            <div class="row">
-                <div class="large-12 columns">
-                    <h5>Facebook Posts/ Webpages <span class="label label-default">{{fbcomments.pages.length}}</span>:</h5>
-                    <div class="panel entities">
-                        <ul ng-repeat="entity in fbcomments.pages">
-                            <li><a href="{{entity.url}}">{{entity.title}}</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="large-12 medium-12 columns">
-                    <h5>Comments <span class="label label-default">{{fbcomments.allcomments.length}}</span>:</h5>
-                    <div class="callout panel comments" style="max-height:300px; overflow:auto;">
+        <div class="row">
+            <div class="large-12 columns">
+                <h5>Facebook Posts/ Webpages <span class="label label-default">{{fbcomments.pages.length}}</span>:</h5>
+                <div class="panel entities">
+                    <ul ng-repeat="entity in fbcomments.pages">
+                        <li>
+                            <div class="row">
+                                <div class="small-10 columns">
+                                    <input type="hidden" ng-model="entity" />
+                                    <a href="{{entity.url}}" >{{entity.title}}</a>
+                                </div>
+                                <div class="small-2 columns">
+                                    <a href="#" ng-click="deleteItem(entity)" class="button warning"><i class="fa fa-trash"></i> trash</a>
 
-                        <ul ng-repeat="fbc in fbcomments.allcomments">
-                            <li >{{fbc.id}} {{fbc.from.name}} (<a href="https://graph.facebook.com/{{fbc.from.id}}" onclick="window.open(this.href); return false();">{{fbc.from.id}}</a>)
-                                <br />"{{fbc.message}}"
-                            </li>
-                        </ul>
+                                </div>
+                            </div>
 
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+        <hr />
+        <div class="row">
+            <div class="large-12 medium-12 columns">
+                <h5>Comments <span class="label label-default">{{fbcomments.allcomments.length}}</span>:</h5>
+                <div class="callout panel comments" style="max-height:300px; overflow:auto;">
 
-        <div class="large-4 medium-4 columns">
-            <h5>Choose a Random Comment</h5>
-            <a href="#" class="medium success button" ng-click="pickRandom()">Pick a Winner</a><br/>
-            <hr />
+                    <ul ng-repeat="fbc in fbcomments.allcomments">
+                        <li >{{fbc.id}} {{fbc.from.name}} (<a href="https://graph.facebook.com/{{fbc.from.id}}" onclick="window.open(this.href); return false();">{{fbc.from.id}}</a>)
+                            <br />"{{fbc.message}}"
+                        </li>
+                    </ul>
 
-            <div class="winner" ng-model="winner">
-                Comment ID:<a href="https://graph.facebook.com/{{fbcomments.winner.id}}" onclick="window.open(this.href); return false();">{{fbcomments.winner.id}}</a><br />
-
-                Name: {{fbcomments.winner.from.name}}
-                (<a href="https://graph.facebook.com/{{fbcomments.winner.from.id}}" onclick="window.open(this.href); return false();">{{fbcomments.winner.from.id}}</a>)
-                <h6>Message:</h6>{{fbcomments.winner.message}}
-
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="large-4 medium-4 columns">
+        <h5>Choose a Random Comment</h5>
+        <a href="#" class="medium success button" ng-click="pickRandom()">Pick a Winner</a><br/>
+        <hr />
+
+        <div class="winner" ng-model="winner">
+            Comment ID:<a href="https://graph.facebook.com/{{fbcomments.winner.id}}" onclick="window.open(this.href); return false();">{{fbcomments.winner.id}}</a><br />
+
+            Name: {{fbcomments.winner.from.name}}
+            (<a href="https://graph.facebook.com/{{fbcomments.winner.from.id}}" onclick="window.open(this.href); return false();">{{fbcomments.winner.from.id}}</a>)
+            <h6>Message:</h6>{{fbcomments.winner.message}}
+
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -104,4 +117,3 @@
 
 </body>
 </html>
-

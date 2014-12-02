@@ -60,8 +60,12 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
         //otherwise treat it as a separate entity.
         $scope.fbcomments.pages.push(entity);
 
+        document.getElementById('posturl').value =  '';
+
         //get comments for that ID.
         $scope.getPostComments(entity);
+
+
 
         return false;
 
@@ -82,9 +86,10 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
                console.log('delete item:',  item.title);
 
                 // now remove item
-                 $scope.fbcomments.pages.pop(item);
+                 var itemindex =  $scope.fbcomments.pages.indexOf(item);
+                 $scope.fbcomments.pages.splice(itemindex,1);
 
-                 // remove all commenst and rebuild
+                 // remove all comments and rebuild
                  $scope.fbcomments.allcomments = [];
 
                  angular.forEach($scope.fbcomments.pages, function (page) {

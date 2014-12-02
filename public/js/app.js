@@ -68,6 +68,39 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
     }
 
 
+
+    // Delete an item and it's associated comments
+    $scope.deleteItem = function (entity) {
+
+
+
+         angular.forEach($scope.fbcomments.pages, function (item) {
+             console.log('item', item);
+             console.log('entity', entity);
+
+             if (item === entity || item.title === entity.title) {
+               console.log('delete item:',  item.title);
+
+                // now remove item
+                 $scope.fbcomments.pages.pop(item);
+
+                 // remove all commenst and rebuild
+                 $scope.fbcomments.allcomments = [];
+
+                 angular.forEach($scope.fbcomments.pages, function (page) {
+                     $scope.getPostComments(page);
+                 });
+
+
+                 return false;
+             }
+
+         });
+
+        return false;
+    }
+
+
     // Get a Random entrant
     $scope.pickRandom = function(){
         $topLimit = $scope.fbcomments.allcomments.length;

@@ -43,24 +43,18 @@
 
 <div class="row">
     <div class="large-8 medium-8 columns">
-        <!-- Grid Example -->
 
         <div class="row">
             <div class="large-12 columns">
                 <h5>Facebook Posts/ Webpages <span class="label label-default">{{fbcomments.pages.length}}</span>:</h5>
                 <div class="panel entities">
-                    <ul ng-repeat="entity in fbcomments.pages">
-                        <li>
-                            <div class="row">
-                                <div class="small-10 columns">
+                    <ul >
+                        <li ng-repeat="entity in fbcomments.pages">
+
                                     <input type="hidden" ng-model="entity" />
                                     <a href="{{entity.url}}" >{{entity.title}}</a>
-                                </div>
-                                <div class="small-2 columns">
-                                    <a href="#" ng-click="deleteItem(entity)" class="button warning"><i class="fa fa-trash"></i> trash</a>
 
-                                </div>
-                            </div>
+                                    <a href="#" ng-click="deleteItem(entity)" class="tiny button secondary right radius"><i class="fa fa-trash"></i></a>
 
                         </li>
                     </ul>

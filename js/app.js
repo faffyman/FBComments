@@ -13,12 +13,12 @@ $(document).foundation();
 
 var model = {
 
-     pages: [ ],
+    pages: [ ],
 
-     allcomments: [ ],
+    allcomments: [ ],
 
     winner: ""
- };
+};
 
 
 var FbComApp = angular.module("FbComApp", []);
@@ -60,11 +60,49 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
         //otherwise treat it as a separate entity.
         $scope.fbcomments.pages.push(entity);
 
+        document.getElementById('posturl').value =  '';
+
         //get comments for that ID.
         $scope.getPostComments(entity);
 
+
+
         return false;
 
+    }
+
+
+
+    // Delete an item and it's associated comments
+    $scope.deleteItem = function (entity) {
+
+
+
+        angular.forEach($scope.fbcomments.pages, function (item) {
+            console.log('item', item);
+            console.log('entity', entity);
+
+            if (item === entity || item.title === entity.title) {
+                console.log('delete item:',  item.title);
+
+                // now remove item
+                var itemindex =  $scope.fbcomments.pages.indexOf(item);
+                $scope.fbcomments.pages.splice(itemindex,1);
+
+                // remove all comments and rebuild
+                $scope.fbcomments.allcomments = [];
+
+                angular.forEach($scope.fbcomments.pages, function (page) {
+                    $scope.getPostComments(page);
+                });
+
+
+                return false;
+            }
+
+        });
+
+        return false;
     }
 
 
@@ -94,23 +132,12 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
             if (graphURL === undefined) {
                 graphURL = "https://graph.facebook.com/comments/?limit=500&ids=";
                 graphURL = graphURL  + postEntity.fbid ;
-
-                console.log('graphURL created: ', graphURL);
-            } else {
-                console.log('graphURL provided: ', graphURL);
             }
-
-        console.log('graphURL: ', graphURL);
 
 
             $http.get(graphURL).success(function (data) {
 
-
-                console.log('data', data);
-
                 var dataObject =  data[postEntity.fbid] || data ;
-
-
 
                 //for other 3rd party URLs.
                 if (dataObject.hasOwnProperty('comments')) {
@@ -125,27 +152,23 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
                         $scope.fbcomments.allcomments.push(dataObject.data[key]);
                     }
                 }
+                    //check for a "next" or "more" url and follow it.
+                    if (dataObject.paging.next) {
 
-                //check for a "next" or "more" url and follow it.
-                if ( dataObject.paging.next ) {
 
+                        var nextURL = dataObject.paging.next;
+                        nextURL = decodeURIComponent(nextURL);
+                        nextURL = nextURL.replace(/=+$/, ''); // remove any "=" chars from eth end of the string
+                        var PE = postEntity;
 
-                    var nextURL =  dataObject.paging.next ;
-                        nextURL =   decodeURIComponent(nextURL);
-                        nextURL =    nextURL.replace(/=+$/, ''); // remove any "=" chars from eth end of the string
-                    var PE = postEntity;
+                        console.log('next URL', nextURL);
 
-                    console.log('next URL', nextURL);
-
-                    // recursivley call this function with the "after" url
-                    $scope.getPostComments(PE,  nextURL);
-                }
+                        // recursivley call this function with the "after" url
+                        $scope.getPostComments(PE, nextURL);
+                    }
 
             }); //end function
 
-
     }
-
-    //
 
 });

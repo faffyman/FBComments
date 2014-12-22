@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facebook Comments Examiner</title>
     <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="components/vendor/font-awesome/css/font-awesome.min.css" />
     <script src="components/vendor/modernizr/modernizr.js"></script>
     <script src="components/vendor/angular/angular.min.js"></script>
 </head>
@@ -31,7 +32,7 @@
                     <input type="text" placeholder="http://..." id="posturl"  ng-model="pageText" />
                 </div>
                 <div class="small-2 columns">
-                    <a href="#" class="button postfix " onclick="return false;" ng-click="addNewItem(pageText)">Add</a>
+                    <a href="#" class="button postfix " ng-click="addNewItem(pageText)">Add</a>
                 </div>
 
             </div>
@@ -49,7 +50,19 @@
                     <h5>Facebook Posts/ Webpages <span class="label label-default">{{fbcomments.pages.length}}</span>:</h5>
                     <div class="panel entities">
                         <ul ng-repeat="entity in fbcomments.pages">
-                            <li><a href="{{entity.url}}">{{entity.title}}</a></li>
+                            <li>
+                                <div class="row">
+                                    <div class="small-10 columns">
+                                        <input type="hidden" ng-model="entity" />
+                                        <a href="{{entity.url}}" >{{entity.title}}</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" ng-click="deleteItem(entity)" class="button warning"><i class="fa fa-trash"></i> trash</a>
+
+                                    </div>
+                                </div>
+
+                            </li>
                         </ul>
                     </div>
                 </div>

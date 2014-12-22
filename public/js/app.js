@@ -13,12 +13,12 @@ $(document).foundation();
 
 var model = {
 
-    pages: [ ],
+     pages: [ ],
 
-    allcomments: [ ],
+     allcomments: [ ],
 
     winner: ""
-};
+ };
 
 
 var FbComApp = angular.module("FbComApp", []);

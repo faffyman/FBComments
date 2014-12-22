@@ -88,26 +88,57 @@ FbComApp.controller("FbComCtrl", function ($scope, $http) {
 
 
     // get comments for each entity (pages)
-    $scope.getPostComments = function (postEntity) {
+    $scope.getPostComments = function (postEntity, graphURL) {
 
 
-            var graphURL = "https://graph.facebook.com/comments/?limit=3000000&ids=";
+            if (graphURL === undefined) {
+                graphURL = "https://graph.facebook.com/comments/?limit=500&ids=";
                 graphURL = graphURL  + postEntity.fbid ;
+
+                console.log('graphURL created: ', graphURL);
+            } else {
+                console.log('graphURL provided: ', graphURL);
+            }
+
+        console.log('graphURL: ', graphURL);
+
 
             $http.get(graphURL).success(function (data) {
 
-                //for other 3rd party URLs.
-                if (data[postEntity.fbid].hasOwnProperty('comments')) {
 
-                    for (key in data[postEntity.fbid].comments.data) {
-                        $scope.fbcomments.allcomments.push(data[postEntity.fbid].comments.data[key]);
+                console.log('data', data);
+
+                var dataObject =  data[postEntity.fbid] || data ;
+
+
+
+                //for other 3rd party URLs.
+                if (dataObject.hasOwnProperty('comments')) {
+
+                    for (key in dataObject.comments.data) {
+                        $scope.fbcomments.allcomments.push(dataObject.comments.data[key]);
                     }
 
                 } else {
-                    // works for faacebook URLs when just adding a facebook entity ID
-                    for (key in data[postEntity.fbid].data) {
-                        $scope.fbcomments.allcomments.push(data[postEntity.fbid].data[key]);
+                    // works for facebook URLs when just adding a facebook entity ID
+                    for (key in dataObject.data) {
+                        $scope.fbcomments.allcomments.push(dataObject.data[key]);
                     }
+                }
+
+                //check for a "next" or "more" url and follow it.
+                if ( dataObject.paging.next ) {
+
+
+                    var nextURL =  dataObject.paging.next ;
+                        nextURL =   decodeURIComponent(nextURL);
+                        nextURL =    nextURL.replace(/=+$/, ''); // remove any "=" chars from eth end of the string
+                    var PE = postEntity;
+
+                    console.log('next URL', nextURL);
+
+                    // recursivley call this function with the "after" url
+                    $scope.getPostComments(PE,  nextURL);
                 }
 
             }); //end function
